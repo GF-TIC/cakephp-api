@@ -55,15 +55,9 @@ class FormAuthenticate extends BaseAuthenticate
     }
 
     /**
-     * Authenticates the identity contained in a request. Will use the `config.userModel`, and `config.fields`
-     * to find POST data that is used to find a matching record in the `config.userModel`. Will return false if
-     * there is no post data, either username or password is missing, or if the scope conditions have not been met.
-     *
-     * @param \Cake\Http\ServerRequest $request The request that contains login information.
-     * @param \Cake\Http\Response $response Unused response object.
-     * @return mixed False on login failure.  An array of User data on success.
+     * @inheritDoc
      */
-    public function authenticate(ServerRequest $request, Response $response)
+    public function getUser(ServerRequest $request)
     {
         $fields = $this->_config['fields'];
         if (!$this->_checkFields($request, $fields)) {
@@ -74,5 +68,13 @@ class FormAuthenticate extends BaseAuthenticate
             $request->getData($fields['username']),
             $request->getData($fields['password'])
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function authenticate(ServerRequest $request, Response $response)
+    {
+        return $this->getUser($request);
     }
 }
